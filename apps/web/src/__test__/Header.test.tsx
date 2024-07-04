@@ -24,8 +24,9 @@ describe("Header component", () => {
 
   it("displays the logo with the correct alt text and src", () => {
     const logoImage = screen.getByRole("img", { name: /Logo/i });
+    expect(logoImage.getAttribute("src")).toContain("/_next/image");
     expect(logoImage).toBeInstanceOf(HTMLImageElement);
-    expect(logoImage.getAttribute("src")).toContain("/fb.png");
+    expect(logoImage.getAttribute("src")).toContain("fb.png");
   });
 
   it("displays the menu items", () => {
