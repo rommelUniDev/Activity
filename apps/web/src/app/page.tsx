@@ -1,44 +1,61 @@
 "use client";
 
-import { useEffect, useState, ChangeEvent, FormEvent } from "react";
-import { Button } from "@repo/ui/button";
+// import { useEffect, useState, ChangeEvent, FormEvent } from "react";
+// import { Button } from "@repo/ui/button";
+import Header from "../components/Header";
 
-const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
+// const API_HOST = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3001";
 
 export default function Web() {
-  const [name, setName] = useState<string>("");
-  const [response, setResponse] = useState<{ message: string } | null>(null);
-  const [error, setError] = useState<string | undefined>();
-
-  useEffect(() => {
-    setResponse(null);
-    setError(undefined);
-  }, [name]);
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setName(e.target.value);
-
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      const result = await fetch(`${API_HOST}/message/${name}`);
-      const response = await result.json();
-      setResponse(response);
-    } catch (err) {
-      console.error(err);
-      setError("Unable to fetch response");
-    }
+  const logo = "/fb.png";
+  const menuItems = [
+    { title: "Item1" },
+    {
+      title: "Parent",
+      subMenu: {
+        title: "Parent",
+        items: ["Submenu1", "Submenu2"],
+      },
+    },
+    { title: "Item3" },
+  ];
+  const handleClick = () => {
+    console.log("Hello 👋");
   };
 
-  const onReset = () => {
-    setName("");
-  };
+  // const [name, setName] = useState<string>("");
+  // const [response, setResponse] = useState<{ message: string } | null>(null);
+  // const [error, setError] = useState<string | undefined>();
+
+  // useEffect(() => {
+  //   setResponse(null);
+  //   setError(undefined);
+  // }, [name]);
+
+  // const onChange = (e: ChangeEvent<HTMLInputElement>) =>
+  //   setName(e.target.value);
+
+  // const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const result = await fetch(`${API_HOST}/message/${name}`);
+  //     const response = await result.json();
+  //     setResponse(response);
+  //   } catch (err) {
+  //     console.error(err);
+  //     setError("Unable to fetch response");
+  //   }
+  // };
+
+  // const onReset = () => {
+  //   setName("");
+  // };
 
   return (
-    <div>
-      <h1>Web</h1>
-      <form onSubmit={onSubmit}>
+    <div className="bg-yellow-100 h-screen pt-3">
+      <Header logo={logo} menuItems={menuItems} onClick={handleClick} />
+      {/* <form onSubmit={onSubmit}>
         <label htmlFor="name">Name </label>
         <input
           type="text"
@@ -61,7 +78,7 @@ export default function Web() {
           <p>{response.message}</p>
           <Button onClick={onReset}>Reset</Button>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -11,6 +11,10 @@
       "outputs": ["coverage/**"],
       "dependsOn": []
     },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
     "lint": {
       "dependsOn": ["^build"]
     },
