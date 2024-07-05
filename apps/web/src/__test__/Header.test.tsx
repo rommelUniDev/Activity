@@ -67,6 +67,10 @@ describe("Header component", () => {
   });
 
   it("redirects to the home page when the logo is clicked", () => {
+    const item = screen.getByText("Item1");
+    fireEvent.click(item);
+    expect(window.location.pathname).toBe("/item1");
+    
     const logo = screen.getByRole("img", { name: /Logo/i });
     fireEvent.click(logo);
     expect(window.location.pathname).toBe("/");
