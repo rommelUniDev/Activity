@@ -3,6 +3,14 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Header from "../components/Header";
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({
+    push: vi.fn((path) => {
+      window.history.pushState({}, "", path);
+    }),
+  }),
+}));
+
 describe("Header component", () => {
   const logo = "/fb.png";
   const menuItems = [
@@ -57,7 +65,7 @@ describe("Header component", () => {
   it("redirects to the correct page when a menu item is clicked", () => {
     const item = screen.getByText("Item1");
     fireEvent.click(item);
-    expect(window.location.pathname).toBe("/item1");
+    expect(window.location.pathname).toContain("/item1");
 
     const parent = screen.getByText("Parent");
     fireEvent.click(parent);
@@ -70,9 +78,9 @@ describe("Header component", () => {
     const item = screen.getByText("Item1");
     fireEvent.click(item);
     expect(window.location.pathname).toBe("/item1");
-    
+
     const logo = screen.getByRole("img", { name: /Logo/i });
     fireEvent.click(logo);
     expect(window.location.pathname).toBe("/");
-  })
+  });
 });

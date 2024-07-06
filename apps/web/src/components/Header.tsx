@@ -1,5 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type SubMenu = {
   title: string;
@@ -19,16 +22,34 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ logo, menuItems, onClick }) => {
   const [openMenuIndex, setOpenMenuIndex] = useState<number | null>(null);
+  const router = useRouter();
 
-  const handleMenuClick = (index: number) => {
-    setOpenMenuIndex(openMenuIndex === index ? null : index);
+  const handleMenuClick = (index: number, menuItem: MenuItem) => {
+    console.log(menuItem);
+    if (menuItem.subMenu) {
+      setOpenMenuIndex(openMenuIndex === index ? null : index);
+    } else {
+      router.push(`/${menuItem.title.toLowerCase()}`);
+    }
+  };
+
+  const handleSubmenuClick = (parent: string | undefined, subMenu: string) => {
+    router.push(`/${parent?.toLowerCase()}/${subMenu.toLowerCase()}`);
   };
 
   return (
     <div className="bg-white shadow-md mx-[30px] rounded-md px-4">
       <div className="container mx-auto px-4 py-2 flex justify-between items-center">
         <div className="flex items-center">
-          <Image src={logo} alt="Logo" width={50} height={50} />
+          <Image
+            src={logo}
+            alt="Logo"
+            width={50}
+            height={50}
+            onClick={() => {
+              router.push("/");
+            }}
+          />
         </div>
         <div className="lg:flex space-x-4">
           {menuItems.map((menuItem, index) => (
@@ -38,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({ logo, menuItems, onClick }) => {
             >
               <a
                 className="text-gray-700 hover:text-gray-900 flex items-center cursor-pointer"
-                onClick={() => handleMenuClick(index)}
+                onClick={() => handleMenuClick(index, menuItem)}
               >
                 {menuItem.title}
                 {menuItem.subMenu && (
@@ -61,6 +82,9 @@ const Header: React.FC<HeaderProps> = ({ logo, menuItems, onClick }) => {
                     <a
                       key={subIndex}
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                      onClick={() =>
+                        handleSubmenuClick(menuItem?.subMenu?.title, subItem)
+                      }
                     >
                       {subItem}
                     </a>
