@@ -1,29 +1,41 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import Header from "../components/Header";
+import Header, { MenuItem } from "../components/Header";
 
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: vi.fn((path) => {
-      window.history.pushState({}, "", path);
-    }),
-  }),
-}));
+vi.mock("next/link", () => {
+  return {
+    default: ({
+      children,
+      href,
+    }: {
+      children: React.ReactNode;
+      href: string;
+    }) => {
+      return React.cloneElement(children as React.ReactElement, {
+        onClick: () => window.history.pushState({}, "", href),
+      });
+    },
+  };
+});
 
 describe("Header component", () => {
   const logo = "/fb.png";
-  const menuItems = [
-    { title: "Item1" },
+  const menuItems: MenuItem[] = [
+    { title: "Item1", link: "/item1" },
     {
       title: "Parent",
       subMenu: {
         title: "Parent",
-        items: ["Submenu1", "Submenu2"],
+        items: [
+          { title: "Submenu1", link: "/parent/submenu1" },
+          { title: "Submenu2", link: "/parent/submenu2" },
+        ],
       },
     },
-    { title: "Item3" },
+    { title: "Item3", link: "/item3" },
   ];
+
   const onClick = vi.fn();
 
   beforeEach(() => {
@@ -51,7 +63,7 @@ describe("Header component", () => {
     fireEvent.click(parentItem);
 
     menuItems[1].subMenu?.items.forEach((subItem) => {
-      const submenuItem = screen.getByText(subItem);
+      const submenuItem = screen.getByText(subItem.title);
       expect(submenuItem).toBeDefined();
     });
   });
@@ -65,7 +77,7 @@ describe("Header component", () => {
   it("redirects to the correct page when a menu item is clicked", () => {
     const item = screen.getByText("Item1");
     fireEvent.click(item);
-    expect(window.location.pathname).toContain("/item1");
+    expect(window.location.pathname).toBe("/item1");
 
     const parent = screen.getByText("Parent");
     fireEvent.click(parent);
