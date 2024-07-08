@@ -1,5 +1,4 @@
 "use client";
-
 // import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 // import { Button } from "@repo/ui/button";
 import Header from "../components/Header";
@@ -9,15 +8,22 @@ import Header from "../components/Header";
 export default function Web() {
   const logo = "/fb.png";
   const menuItems = [
-    { title: "Item1" },
+    { title: "Item1", link: "/item1" },
     {
       title: "Parent",
+      link: "/parent",
       subMenu: {
         title: "Parent",
-        items: ["Submenu1", "Submenu2"],
+        items: [
+          { title: "Submenu1", link: "/parent/submenu1" },
+          {
+            title: "Submenu2",
+            link: "/parent/submenu2",
+          },
+        ],
       },
     },
-    { title: "Item3" },
+    { title: "Item3", link: "/item3" },
   ];
   const handleClick = () => {
     console.log("Hello 👋");

@@ -1,16 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 type SubMenu = {
   title: string;
-  items: string[];
+  items: Array<{ title: string, link: string }>;
 };
 
 type MenuItem = {
   title: string;
+  link: string;
   subMenu?: SubMenu;
 };
 
@@ -57,11 +59,10 @@ const Header: React.FC<HeaderProps> = ({ logo, menuItems, onClick }) => {
               key={index}
               className="relative group hover:bg-slate-200 p-3 rounded-lg"
             >
-              <a
-                className="text-gray-700 hover:text-gray-900 flex items-center cursor-pointer"
-                onClick={() => handleMenuClick(index, menuItem)}
-              >
-                {menuItem.title}
+              <Link href={menuItem.link}>
+                <a className="text-gray-700 hover:text-gray-900 flex items-center">
+                  {menuItem.title}
+                </a>
                 {menuItem.subMenu && (
                   <svg
                     className={`ml-1 fill-current transition-transform duration-200 ${
@@ -75,19 +76,17 @@ const Header: React.FC<HeaderProps> = ({ logo, menuItems, onClick }) => {
                     <path d="M10 7l5 5-5 5V7z" />
                   </svg>
                 )}
-              </a>
+              </Link>
               {menuItem.subMenu && openMenuIndex === index && (
                 <div className="absolute w-[120px] left-[-10px] mt-[30px] bg-white shadow-md  justify-center items-center text-center  rounded-xl">
                   {menuItem.subMenu.items.map((subItem, subIndex) => (
-                    <a
+                    <Link
+                    href={subItem.link}
                       key={subIndex}
                       className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                      onClick={() =>
-                        handleSubmenuClick(menuItem?.subMenu?.title, subItem)
-                      }
                     >
-                      {subItem}
-                    </a>
+                      {subItem.title}
+                    </Link>
                   ))}
                 </div>
               )}
